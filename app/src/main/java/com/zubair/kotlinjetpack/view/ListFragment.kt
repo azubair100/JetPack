@@ -18,16 +18,4 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.list_fragment, container, false)
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        /*val action was created in during the res/navigation/dog_navigation step
-        check notes*/
-        button_details.setOnClickListener {
-            val action = ListFragmentDirections.navigateToDetailFragment()
-            action.dogUuid = 5
-            Navigation.findNavController(it).navigate(action)
-        }
-    }
 }
