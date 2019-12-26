@@ -21,6 +21,9 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /*val action was created in during the res/navigation/dog_navigation step
+        check notes*/
         button_details.setOnClickListener {
             val action = ListFragmentDirections.navigateToDetailFragment()
             Navigation.findNavController(it).navigate(action)

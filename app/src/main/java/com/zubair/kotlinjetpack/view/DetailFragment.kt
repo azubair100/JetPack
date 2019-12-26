@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 
 import com.zubair.kotlinjetpack.R
+import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.list_fragment.*
 
 class DetailFragment : Fragment() {
@@ -21,7 +22,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        button_details.setOnClickListener {
+        button_list.setOnClickListener {
             val action = DetailFragmentDirections.navigateToListFragment()
             Navigation.findNavController(it).navigate(action)
         }
