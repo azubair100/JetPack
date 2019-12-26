@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">KotlinJetpack</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="list_fragment">List Fragment</string>
     <string name="detail_fragment">Detail Fragment</string>
+    <string name="dog_name">Dog Name</string>
+    <string name="lifespan">Lifespan</string>
+    <string name="placeholder">placeholder</string>
+    <string name="purpose">Purpose</string>
+    <string name="group">Group</string>
+    <string name="temperament">Temperament</string>
 </resources>
