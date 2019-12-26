@@ -9,7 +9,7 @@
         android:name="com.zubair.kotlinjetpack.view.ListFragment"
         android:label="ListFragment" >
         <action
-            android:id="@+id/action_details_fragment"
+            android:id="@+id/navigate_to_detail_fragment"
             app:destination="@id/detailFragment" />
     </fragment>
     <fragment
@@ -17,7 +17,7 @@
         android:name="com.zubair.kotlinjetpack.view.DetailFragment"
         android:label="DetailFragment" >
         <action
-            android:id="@+id/action_return_list_fragment"
+            android:id="@+id/navigate_to_list_fragment"
             app:destination="@id/listFragment" />
     </fragment>
 </navigation>

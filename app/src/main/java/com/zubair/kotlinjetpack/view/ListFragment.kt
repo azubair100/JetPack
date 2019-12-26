@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 
 import com.zubair.kotlinjetpack.R
+import kotlinx.android.synthetic.main.list_fragment.*
 
 class ListFragment : Fragment() {
 
@@ -17,5 +19,11 @@ class ListFragment : Fragment() {
     ): View? = inflater.inflate(R.layout.list_fragment, container, false)
 
 
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        button_details.setOnClickListener {
+            val action = ListFragmentDirections.navigateToDetailFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+    }
 }
