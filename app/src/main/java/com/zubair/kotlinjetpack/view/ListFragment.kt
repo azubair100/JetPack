@@ -33,12 +33,27 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpRecyclerView()
+        setUpSwipeRefreshLayout()
+        observeViewModel()
+        listViewModel.refresh()
+    }
+
+    private fun setUpSwipeRefreshLayout(){
         dog_list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = dogAdapter
         }
-        observeViewModel()
-        listViewModel.refresh()
+    }
+
+    private fun setUpRecyclerView(){
+        refresh_layout.setOnRefreshListener {
+            dog_list.visibility = View.GONE
+            error_text.visibility = View.GONE
+            progress_bar.visibility = View.VISIBLE
+            listViewModel.refresh()
+            refresh_layout.isRefreshing = false
+        }
     }
 
     private fun observeViewModel(){

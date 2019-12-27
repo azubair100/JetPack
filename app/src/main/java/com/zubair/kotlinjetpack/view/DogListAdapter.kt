@@ -13,7 +13,7 @@ class DogListAdapter(private val dogList: ArrayList<DogBreed>): RecyclerView.Ada
 
     fun updateDogList(newList : List<DogBreed>){
         dogList.clear()
-        dogList.addAll(dogList)
+        dogList.addAll(newList)
         notifyDataSetChanged()
     }
 
@@ -23,15 +23,17 @@ class DogListAdapter(private val dogList: ArrayList<DogBreed>): RecyclerView.Ada
 
     override fun getItemCount(): Int = dogList.size
 
-    override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
-        val dog = dogList[position]
-        holder.view.name.text = dog.name
-        holder.view.lifespan.text = dog.lifespan
-        holder.view.setOnClickListener{
-            Navigation.findNavController(it).navigate(ListFragmentDirections.navigateToDetailFragment())
+    override fun onBindViewHolder(holder: DogViewHolder, position: Int) = holder.bind(dogList[position])
+
+    class DogViewHolder(view: View) : RecyclerView.ViewHolder(view){
+
+        fun bind(dog: DogBreed) {
+            itemView.name.text = dog.name
+            itemView.lifespan.text = dog.lifespan
+            itemView.setOnClickListener{
+                Navigation.findNavController(it).navigate(ListFragmentDirections.navigateToDetailFragment())
+            }
         }
     }
-
-    class DogViewHolder(var view: View) : RecyclerView.ViewHolder(view)
 
 }
