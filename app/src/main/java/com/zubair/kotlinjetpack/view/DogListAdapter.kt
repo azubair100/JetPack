@@ -3,6 +3,7 @@ package com.zubair.kotlinjetpack.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.zubair.kotlinjetpack.R
 import com.zubair.kotlinjetpack.model.DogBreed
@@ -26,6 +27,9 @@ class DogListAdapter(private val dogList: ArrayList<DogBreed>): RecyclerView.Ada
         val dog = dogList[position]
         holder.view.name.text = dog.name
         holder.view.lifespan.text = dog.lifespan
+        holder.view.setOnClickListener{
+            Navigation.findNavController(it).navigate(ListFragmentDirections.navigateToDetailFragment())
+        }
     }
 
     class DogViewHolder(var view: View) : RecyclerView.ViewHolder(view)
