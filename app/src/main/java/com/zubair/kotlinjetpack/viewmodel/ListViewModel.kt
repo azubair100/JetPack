@@ -1,6 +1,7 @@
 package com.zubair.kotlinjetpack.viewmodel
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zubair.kotlinjetpack.model.DogBreed
@@ -15,17 +16,39 @@ import kotlinx.coroutines.launch
 
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
+    private val dogService = DogService()
     val dogList = MutableLiveData<List<DogBreed>>()
     val listLLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
     private val disposable = CompositeDisposable()
+
+    //For keeping track of the last room database, dogs table update
     private var prefHelper = SharedPreferencesHelper(getApplication())
 
+    //time difference is 5 minutes in nano seconds in Long
+    private var refreshTime = 300 * 1000 * 1000 * 1000L
 
-    private val dogService = DogService()
 
 
-    fun refresh(){ fetchFromRemote() }
+    fun refresh(){
+        val updateTime = prefHelper.getUpdateTime()
+        if(updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime){
+            fetchFromDatabase()
+        }
+        else{ fetchFromRemote() }
+    }
+
+    fun refreshByPassCache(){
+        fetchFromRemote()
+    }
+
+    private fun fetchFromDatabase(){
+        loading.value = true
+        launch {
+            dogsRetrieved(DogDataBase(getApplication()).dogDAO().getAllDogs())
+            Toast.makeText(getApplication(), "Dogs gotten from database", Toast.LENGTH_LONG).show()
+        }
+    }
 
     //First get dogs from remote api and then store locally and then retrieve it
     private fun fetchFromRemote(){
@@ -35,7 +58,12 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableSingleObserver<List<DogBreed>>(){
-                    override fun onSuccess(dogs: List<DogBreed>) { storeDogsLocally(dogs) }
+                    override fun onSuccess(dogs: List<DogBreed>) {
+                        storeDogsLocally(dogs)
+                        Toast.makeText(getApplication(),
+                            "Dogs gotten from endpoint",
+                            Toast.LENGTH_LONG).show()
+                    }
 
                     override fun onError(e: Throwable) {
                         listLLoadError.value = true

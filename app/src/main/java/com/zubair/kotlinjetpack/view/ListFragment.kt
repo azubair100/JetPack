@@ -51,7 +51,7 @@ class ListFragment : Fragment() {
             dog_list.visibility = View.GONE
             error_text.visibility = View.GONE
             progress_bar.visibility = View.VISIBLE
-            listViewModel.refresh()
+            listViewModel.refreshByPassCache()
             refresh_layout.isRefreshing = false
         }
     }
