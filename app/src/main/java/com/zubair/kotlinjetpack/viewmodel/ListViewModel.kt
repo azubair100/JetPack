@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.zubair.kotlinjetpack.model.DogBreed
 import com.zubair.kotlinjetpack.model.DogDataBase
 import com.zubair.kotlinjetpack.network.DogService
+import com.zubair.kotlinjetpack.util.SharedPreferencesHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -18,6 +19,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     val listLLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
     private val disposable = CompositeDisposable()
+    private var prefHelper = SharedPreferencesHelper(getApplication())
 
 
     private val dogService = DogService()
@@ -48,7 +50,12 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
         listLLoadError.value = false
         loading.value = false
     }
-
+/*
+* Store the time of when we had retrieved the dogs information remote;y
+* The reason for that is when we have the timestamp we can decide whether we need to re fetch the
+* the information from the api or we can just call local database, room etc
+* We also have the shared preference key value pair that stores exactly the time it was updated
+*/
     private fun storeDogsLocally(list: List<DogBreed>){
         //Kotlin Co Routine, separate thread
         launch {
@@ -66,6 +73,8 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
             }
             dogsRetrieved(list)
         }
+        //Stores the exact time when the data was stored in room
+        prefHelper.saveUpdateTime(System.nanoTime())
     }
 
     override fun onCleared() {
