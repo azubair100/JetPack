@@ -14,6 +14,7 @@ fun getProgressDrawable(context: Context): CircularProgressDrawable =
         start()
     }
 
+//if you want to use glide
 fun ImageView.loadImage(uri: String?, progressDrawable: CircularProgressDrawable){
     val options = RequestOptions().placeholder(progressDrawable).error(R.drawable.ic_dog_breed)
     Glide.with(context).setDefaultRequestOptions(options).load(uri).into(this)

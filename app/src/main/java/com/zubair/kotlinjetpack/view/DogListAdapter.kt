@@ -39,7 +39,9 @@ class DogListAdapter(private val dogList: ArrayList<DogBreed>): RecyclerView.Ada
             itemView.lifespan.text = dog.lifespan
             Picasso.get().load(dog.url).placeholder(getProgressDrawable(itemView.context)).into(itemView.icon)
             itemView.setOnClickListener{
-                Navigation.findNavController(it).navigate(ListFragmentDirections.navigateToDetailFragment())
+                val navigation = ListFragmentDirections.navigateToDetailFragment()
+                navigation.dogUuid = dog.uuid
+                Navigation.findNavController(it).navigate(navigation)
             }
         }
     }
