@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="dog"
+            type="com.zubair.kotlinjetpack.model.DogBreed" />
+    </data>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -13,7 +19,7 @@
             android:layout_weight="2"
             android:padding="4dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_dog_breed"
+            android:imageUrl="@{dog.url}"
             android:contentDescription="@string/placeholder" />
 
         <LinearLayout
@@ -29,14 +35,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Title"
-                android:text="@string/dog_name"/>
+                android:text="@{dog.name}"/>
 
             <TextView
                 android:id="@+id/lifespan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Text"
-                android:text="@string/lifespan"/>
+                android:text="@{dog.lifespan}"/>
 
         </LinearLayout>
 
