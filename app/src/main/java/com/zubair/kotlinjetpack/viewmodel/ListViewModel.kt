@@ -1,12 +1,14 @@
 package com.zubair.kotlinjetpack.viewmodel
 
 import android.app.Application
+import android.app.NotificationManager
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zubair.kotlinjetpack.model.DogBreed
 import com.zubair.kotlinjetpack.model.DogDataBase
 import com.zubair.kotlinjetpack.network.DogService
+import com.zubair.kotlinjetpack.util.NotificationsHelper
 import com.zubair.kotlinjetpack.util.SharedPreferencesHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -63,6 +65,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
                         Toast.makeText(getApplication(),
                             "Dogs gotten from endpoint",
                             Toast.LENGTH_LONG).show()
+                        NotificationsHelper(getApplication()).createNotification()
                     }
 
                     override fun onError(e: Throwable) {
