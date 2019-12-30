@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.squareup.picasso.Picasso
 
 import com.zubair.kotlinjetpack.R
+import com.zubair.kotlinjetpack.databinding.DetailFragmentBinding
 import com.zubair.kotlinjetpack.util.getProgressDrawable
 import com.zubair.kotlinjetpack.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.detail_fragment.*
@@ -22,10 +24,15 @@ class DetailFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
     private var dogUuid = 0
 
+    private lateinit var dataBinding: DetailFragmentBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.detail_fragment, container, false)
+    ): View? {
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.detail_fragment, container, false)
+        return dataBinding.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +42,6 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         arguments?.let { dogUuid = DetailFragmentArgs.fromBundle(it).dogUuid }
         observeViewModel()
         detailViewModel.fetch(dogUuid)
@@ -43,14 +49,7 @@ class DetailFragment : Fragment() {
 
     private fun observeViewModel() {
         detailViewModel.dogLiveData.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                name.text = it.name
-                lifespan.text = it.lifespan
-                purpose.text = it.purpose
-                group.text = it.group
-                temperament.text = it.temperament
-                Picasso.get().load(it.url).placeholder(getProgressDrawable(activity!!)).into(image)
-            }
+            it?.let { dataBinding.dog = it }
         })
     }
 
