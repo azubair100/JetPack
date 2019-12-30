@@ -8,6 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.zubair.kotlinjetpack.R
 
+val PERMISSION_SEND_SMS = 234
+
 fun getProgressDrawable(context: Context): CircularProgressDrawable =
     CircularProgressDrawable(context).apply {
         strokeWidth =10f

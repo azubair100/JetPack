@@ -29,8 +29,8 @@ class DetailFragment : Fragment() {
 
     private lateinit var detailViewModel: DetailViewModel
     private var dogUuid = 0
-
     private lateinit var dataBinding: DetailFragmentBinding
+    private var sendTextStarted = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,9 +62,8 @@ class DetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.action_send_text ->{
-                view?.let{
-
-                }
+                sendTextStarted = true
+                (activity as MainActivity).checkTextPermission()
             }
 
             R.id.action_share ->{
@@ -76,6 +75,12 @@ class DetailFragment : Fragment() {
 
         return super.onOptionsItemSelected(item)
     }
+
+    fun onPermissionResult(permissionGranted: Boolean){
+
+    }
+
+
     private fun observeViewModel() {
         detailViewModel.dogLiveData.observe(viewLifecycleOwner, Observer {
             it?.let { dog ->
