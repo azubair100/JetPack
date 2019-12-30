@@ -11,11 +11,16 @@
         <variable
             name="dog"
             type="com.zubair.kotlinjetpack.model.DogBreed" />
+        
+        <variable
+            name="palette"
+            type="com.zubair.kotlinjetpack.model.DogPalette" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{palette.color}"
         tools:context=".view.DetailFragment">
 
         <ImageView

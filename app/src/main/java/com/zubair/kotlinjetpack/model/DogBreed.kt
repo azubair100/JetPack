@@ -33,7 +33,7 @@ data class DogBreed(
 
     @ColumnInfo(name = "url")
     @SerializedName("url")
-    val url: String
+    val url: String?
 ){
     /*
     Since all these api retrieved data is string, I want to have an unique id every time I
