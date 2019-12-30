@@ -2,12 +2,12 @@ package com.zubair.kotlinjetpack.view
 
 
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.zubair.kotlinjetpack.R
@@ -22,7 +22,10 @@ class ListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.list_fragment, container, false)
+    ): View? {
+        setHasOptionsMenu(true)
+        return inflater.inflate(R.layout.list_fragment, container, false)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +40,23 @@ class ListFragment : Fragment() {
         setUpSwipeRefreshLayout()
         observeViewModel()
         listViewModel.refresh()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.list_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.navigate_settings ->{
+                view?.let{
+                    Navigation.findNavController(it).
+                        navigate(ListFragmentDirections.navigateToSettingsFragment())
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setUpSwipeRefreshLayout(){

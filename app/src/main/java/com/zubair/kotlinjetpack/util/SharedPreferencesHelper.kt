@@ -30,4 +30,7 @@ class SharedPreferencesHelper {
 
     fun getUpdateTime() = prefs?.getLong(PREF_TIME, 0)
 
+    //exact key as described in the preferences.xml
+    fun getCachedDuration() = prefs?.getString("pref_cache_duration", "")
+
 }

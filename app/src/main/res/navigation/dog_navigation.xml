@@ -14,6 +14,9 @@
             app:destination="@id/detailFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/navigate_to_settings_fragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -30,5 +33,10 @@
             android:defaultValue="0"
             app:argType="integer"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.zubair.kotlinjetpack.view.SettingsFragment"
+        android:label="SettingsFragment" />
 
 </navigation>

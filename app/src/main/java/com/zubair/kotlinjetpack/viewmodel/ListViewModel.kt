@@ -1,10 +1,8 @@
 package com.zubair.kotlinjetpack.viewmodel
 
 import android.app.Application
-import android.app.NotificationManager
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.zubair.kotlinjetpack.model.DogBreed
 import com.zubair.kotlinjetpack.model.DogDataBase
 import com.zubair.kotlinjetpack.network.DogService
@@ -15,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
+import java.lang.NumberFormatException
 
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
@@ -28,11 +27,12 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     private var prefHelper = SharedPreferencesHelper(getApplication())
 
     //time difference is 5 minutes in nano seconds in Long
-    private var refreshTime = 300 * 1000 * 1000 * 1000L
+    private var refreshTime = 300L
 
 
 
     fun refresh(){
+        checkCacheDuration()
         val updateTime = prefHelper.getUpdateTime()
         if(updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime){
             fetchFromDatabase()
@@ -42,6 +42,17 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
 
     fun refreshByPassCache(){
         fetchFromRemote()
+    }
+
+    private fun checkCacheDuration(){
+        val cachePreference = prefHelper.getCachedDuration()
+        try{
+            val cachePreferenceInt = cachePreference?.toInt() ?: 300
+            refreshTime = cachePreferenceInt.times(1000 * 1000 * 1000L)
+        }
+        catch (e: NumberFormatException){
+            e.printStackTrace()
+        }
     }
 
     private fun fetchFromDatabase(){
