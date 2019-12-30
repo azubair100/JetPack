@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="textInfo"
+            type="com.zubair.kotlinjetpack.model.TextInfo" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/text_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:lines="1"
+            android:hint="To:"
+            android:gravity="center_horizontal"/>
+
+        <EditText
+            android:id="@+id/text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:text="@{textInfo.text}"
+            android:gravity="center_horizontal"/>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="fitCenter"
+            android:imageUrl="@{textInfo.imageUrl}"/>
+
+    </LinearLayout>
+
+</layout>

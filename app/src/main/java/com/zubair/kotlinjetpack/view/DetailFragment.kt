@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -18,7 +19,10 @@ import com.squareup.picasso.Picasso
 
 import com.zubair.kotlinjetpack.R
 import com.zubair.kotlinjetpack.databinding.DetailFragmentBinding
+import com.zubair.kotlinjetpack.databinding.SendTextDialogBinding
+import com.zubair.kotlinjetpack.model.DogBreed
 import com.zubair.kotlinjetpack.model.DogPalette
+import com.zubair.kotlinjetpack.model.TextInfo
 import com.zubair.kotlinjetpack.util.getProgressDrawable
 import com.zubair.kotlinjetpack.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.detail_fragment.*
@@ -31,6 +35,7 @@ class DetailFragment : Fragment() {
     private var dogUuid = 0
     private lateinit var dataBinding: DetailFragmentBinding
     private var sendTextStarted = false
+    private var currentDog: DogBreed? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,6 +82,37 @@ class DetailFragment : Fragment() {
     }
 
     fun onPermissionResult(permissionGranted: Boolean){
+        if(sendTextStarted && permissionGranted){
+            context?.let{
+                val textInfo = TextInfo(
+                    "",
+                    "${currentDog?.name} bred for ${currentDog?.purpose}",
+                    currentDog?.url)
+
+                val dialogBinding = DataBindingUtil.inflate<SendTextDialogBinding>(
+                    LayoutInflater.from(it),
+                    R.layout.send_text_dialog,
+                    null,
+                    false
+                )
+
+                AlertDialog.Builder(it)
+                    .setView(dialogBinding.root)
+                    .setPositiveButton("Send Text") {dialog, which ->
+                        if(!dialogBinding.textDestination.text.isNullOrEmpty()){
+                            textInfo.to = dialogBinding.textDestination.text.toString()
+                            sendText(textInfo)
+                        }
+                    }
+                    .setNegativeButton("Cancel"){dialog, which ->  dialog.dismiss()}
+                    .show()
+
+                dialogBinding.textInfo = textInfo
+            }
+        }
+    }
+
+    private fun sendText(textInfo: TextInfo) {
 
     }
 
@@ -84,13 +120,14 @@ class DetailFragment : Fragment() {
     private fun observeViewModel() {
         detailViewModel.dogLiveData.observe(viewLifecycleOwner, Observer {
             it?.let { dog ->
+                currentDog = dog
                 dataBinding.dog = dog
-                dog.url?.let{ setUpBackgroundColor(dog.url) }
+                dog.url?.let{ setUpBackgroundColorPalette(dog.url) }
             }
         })
     }
 
-    private fun setUpBackgroundColor(url: String){
+    private fun setUpBackgroundColorPalette(url: String){
         Glide.with(this)
             .asBitmap()
             .load(url)
@@ -100,7 +137,7 @@ class DetailFragment : Fragment() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     Palette.from(resource)
                         .generate{palette ->
-                            val intColor = palette?.dominantSwatch?.rgb ?: 0
+                            val intColor = palette?.darkVibrantSwatch?.rgb ?: 0
                             //you can play around with vibrantSwatch
                             val myPalette = DogPalette(intColor)
                             dataBinding.palette = myPalette

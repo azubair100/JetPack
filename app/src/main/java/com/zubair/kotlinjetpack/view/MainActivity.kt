@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     private fun setUpBackButtonOnTop(){
-        navController = Navigation.findNavController(this, R.id.fragment_navigation_container_view)
+        navController = Navigation.findNavController(this, R.id.fragment_navigation_container)
         NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
@@ -29,35 +29,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpBackButtonOnTop()
-    }
-
-    fun checkTextPermission(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-            != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)){
-                //show rationale or reason here, the second reason
-                AlertDialog.Builder(this).setTitle(getString(R.string.text_permission_title))
-                    .setMessage(getString(R.string.text_permission_message))
-                    .setPositiveButton(getString(R.string.ask)) { dialog, which ->  requestTextPermission() }
-                    .setNegativeButton(getString(R.string.no)) { dialog, which ->  notifyDetailFragment(false) }
-                    .show()
-            }
-            else{ requestTextPermission() }
-        }
-        else{ notifyDetailFragment(true) }
-    }
-
-    private fun notifyDetailFragment(notified: Boolean) {
-        val activeFragment = fragment_navigation_container_view.childFragmentManager.
-            primaryNavigationFragment
-        if(activeFragment is DetailFragment) activeFragment.onPermissionResult(notified)
-    }
-
-    private fun requestTextPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.SEND_SMS),
-            PERMISSION_SEND_SMS)
     }
 
     override fun onRequestPermissionsResult(
@@ -76,4 +47,34 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun notifyDetailFragment(notified: Boolean) {
+        val activeFragment = fragment_navigation_container.childFragmentManager.
+            primaryNavigationFragment
+        if(activeFragment is DetailFragment) activeFragment.onPermissionResult(notified)
+    }
+
+    fun checkTextPermission(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+            != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.SEND_SMS)){
+                //show rationale or reason here, the second reason
+                AlertDialog.Builder(this).setTitle(getString(R.string.text_permission_title))
+                    .setMessage(getString(R.string.text_permission_message))
+                    .setPositiveButton(getString(R.string.ask)) { dialog, which ->  requestTextPermission() }
+                    .setNegativeButton(getString(R.string.no)) { dialog, which ->  notifyDetailFragment(false) }
+                    .show()
+            }
+            else{ requestTextPermission() }
+        }
+        else{ notifyDetailFragment(true) }
+    }
+
+    private fun requestTextPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.SEND_SMS),
+            PERMISSION_SEND_SMS)
+    }
+
 }
