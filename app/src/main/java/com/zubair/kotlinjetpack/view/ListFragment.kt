@@ -29,9 +29,9 @@ class ListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
         listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)
         dogAdapter = DogListAdapter(arrayListOf())
-        retainInstance = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

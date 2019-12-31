@@ -18,36 +18,39 @@ import java.lang.NumberFormatException
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
     private val dogService = DogService()
-    val dogList = MutableLiveData<List<DogBreed>>()
-    val listLLoadError = MutableLiveData<Boolean>()
-    val loading = MutableLiveData<Boolean>()
+    var dogList: MutableLiveData<List<DogBreed>> = MutableLiveData()
+    val listLLoadError: MutableLiveData<Boolean> = MutableLiveData()
+    val loading: MutableLiveData<Boolean> = MutableLiveData()
     private val disposable = CompositeDisposable()
 
     //For keeping track of the last room database, dogs table update
     private var prefHelper = SharedPreferencesHelper(getApplication())
 
     //time difference is 5 minutes in nano seconds in Long
-    private var refreshTime = 300L
-
+    private var refreshTime = 500 * 1000 * 1000 * 1000L
 
 
     fun refresh(){
-        checkCacheDuration()
-        val updateTime = prefHelper.getUpdateTime()
-        if(updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime){
-            fetchFromDatabase()
+        if(!checkForOldValue()) {
+            checkCacheDuration()
+            val updateTime = prefHelper.getUpdateTime()
+            if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
+                fetchFromDatabase()
+            } else {
+                fetchFromRemote()
+            }
         }
-        else{ fetchFromRemote() }
     }
 
-    fun refreshByPassCache(){
-        fetchFromRemote()
-    }
+    private fun checkForOldValue(): Boolean = !dogList.value.isNullOrEmpty()
+
+
+    fun refreshByPassCache(){ fetchFromRemote() }
 
     private fun checkCacheDuration(){
         val cachePreference = prefHelper.getCachedDuration()
         try{
-            val cachePreferenceInt = cachePreference?.toInt() ?: 300
+            val cachePreferenceInt = cachePreference?.toInt() ?: 500
             refreshTime = cachePreferenceInt.times(1000 * 1000 * 1000L)
         }
         catch (e: NumberFormatException){
