@@ -1,9 +1,12 @@
 package com.zubair.kotlinjetpack.view
 
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -73,7 +76,12 @@ class DetailFragment : Fragment() {
 
             R.id.action_share ->{
                 view?.let{
-
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.type = "text/plain"
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Check the dog")
+                    intent.putExtra(Intent.EXTRA_TEXT, "${currentDog?.name} bred for ${currentDog?.purpose}")
+                    intent.putExtra(Intent.EXTRA_STREAM, currentDog?.url)
+                    startActivity(Intent.createChooser(intent, "Share With"))
                 }
             }
         }
@@ -113,7 +121,10 @@ class DetailFragment : Fragment() {
     }
 
     private fun sendText(textInfo: TextInfo) {
-
+        val intent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val text = SmsManager.getDefault()
+        text.sendTextMessage(textInfo.to, "", textInfo.text, pendingIntent, null)
     }
 
 
