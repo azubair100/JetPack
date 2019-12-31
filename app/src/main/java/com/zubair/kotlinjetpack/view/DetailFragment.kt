@@ -44,7 +44,11 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //this code is for telling the code that we need a menu for this screen
+        //make sure to create menu> menu.xml
         setHasOptionsMenu(true)
+        //data binding variable to inflate the layout and assigning the variable
+        //check observeViewModel()
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.detail_fragment, container, false)
         return dataBinding.root
     }
@@ -62,11 +66,13 @@ class DetailFragment : Fragment() {
         detailViewModel.fetch(dogUuid)
     }
 
+    //Needed for inflating the menu.xml file when clicked
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.detail_menu, menu)
     }
 
+    //specifying the options functions
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.action_send_text ->{
@@ -138,6 +144,7 @@ class DetailFragment : Fragment() {
         })
     }
 
+    //Palette implemented for background color change
     private fun setUpBackgroundColorPalette(url: String){
         Glide.with(this)
             .asBitmap()

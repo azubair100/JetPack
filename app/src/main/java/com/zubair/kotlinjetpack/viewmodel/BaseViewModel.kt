@@ -8,6 +8,7 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
 //This is for the database since it needs an application context
+//And this is also done to do all the database work from the background
 abstract class BaseViewModel(application: Application): AndroidViewModel(application), CoroutineScope {
 
     private val job = Job()

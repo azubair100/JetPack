@@ -23,6 +23,7 @@ fun ImageView.loadImage(uri: String?, progressDrawable: CircularProgressDrawable
     Glide.with(context).setDefaultRequestOptions(options).load(uri).into(this)
 }
 
+//This is a binding adapter for custom attribute
 @BindingAdapter("android:imageUrl")
 fun loadImage(view: ImageView, url: String?){
     view.loadImage(url, getProgressDrawable(view.context))

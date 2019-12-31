@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase
 abstract class DogDataBase: RoomDatabase() {
     abstract fun dogDAO(): DogDAO
 
+    //This is for only having one instance of the room database
     companion object{
         @Volatile private var instance: DogDataBase? = null
         private val LOCK = Any()

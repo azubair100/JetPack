@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         setUpBackButtonOnTop()
     }
 
+    //asking permission code starts here
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

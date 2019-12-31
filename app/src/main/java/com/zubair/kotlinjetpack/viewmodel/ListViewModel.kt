@@ -26,7 +26,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     //For keeping track of the last room database, dogs table update
     private var prefHelper = SharedPreferencesHelper(getApplication())
 
-    //time difference is 5 minutes in nano seconds in Long
+    //time difference is 5 minutes + in nano seconds in Long
     private var refreshTime = 500 * 1000 * 1000 * 1000L
 
 
@@ -36,9 +36,8 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
             val updateTime = prefHelper.getUpdateTime()
             if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
                 fetchFromDatabase()
-            } else {
-                fetchFromRemote()
             }
+            else { fetchFromRemote() }
         }
     }
 
@@ -53,9 +52,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
             val cachePreferenceInt = cachePreference?.toInt() ?: 500
             refreshTime = cachePreferenceInt.times(1000 * 1000 * 1000L)
         }
-        catch (e: NumberFormatException){
-            e.printStackTrace()
-        }
+        catch (e: NumberFormatException){ e.printStackTrace() }
     }
 
     private fun fetchFromDatabase(){
@@ -96,7 +93,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
         loading.value = false
     }
 /*
-* Store the time of when we had retrieved the dogs information remote;y
+* Store the time of when we had retrieved the dogs information remote;
 * The reason for that is when we have the timestamp we can decide whether we need to re fetch the
 * the information from the api or we can just call local database, room etc
 * We also have the shared preference key value pair that stores exactly the time it was updated

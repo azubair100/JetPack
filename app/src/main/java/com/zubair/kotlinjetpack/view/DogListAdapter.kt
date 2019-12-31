@@ -33,7 +33,7 @@ class DogListAdapter(private val dogList: ArrayList<DogBreed>):
         holder.view.listener = this
     }
 
-    override fun onDogclicked(view: View) {
+    override fun onDogClicked(view: View) {
         val action = ListFragmentDirections.navigateToDetailFragment()
         action.dogUuid = view.dog_uuid.text.toString().toInt()
         Navigation.findNavController(view).navigate(action)
