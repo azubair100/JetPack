@@ -2,7 +2,6 @@ package com.zubair.kotlinjetpack.view
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -36,8 +35,8 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpRecyclerView()
-        setUpSwipeRefreshLayout()
+        setUpSwipeRefresh()
+        setUpRecycler()
         observeViewModel()
         listViewModel.refresh()
     }
@@ -59,14 +58,14 @@ class ListFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setUpSwipeRefreshLayout(){
+    private fun setUpRecycler(){
         dog_list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = dogAdapter
         }
     }
 
-    private fun setUpRecyclerView(){
+    private fun setUpSwipeRefresh(){
         refresh_layout.setOnRefreshListener {
             dog_list.visibility = View.GONE
             error_text.visibility = View.GONE
