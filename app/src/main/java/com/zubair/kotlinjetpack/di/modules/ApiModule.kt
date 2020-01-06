@@ -29,6 +29,8 @@ class ApiModule {
     }
 
 
+    /*Allows us to inject DogService where ever we want to
+    Basically we will provide a DogService somewhere*/
     @Provides
     fun provideDogService(): DogService = DogService()
 

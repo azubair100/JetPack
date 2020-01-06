@@ -7,9 +7,12 @@ import com.zubair.kotlinjetpack.viewmodel.ListViewModel
 import dagger.Component
 import javax.inject.Singleton
 
-/*ViewModelComponent is a class for creating a connection between
-ApiModule, PrefsModule, AppModule in ListViewModel through DaggerViewModelComponent
-DaggerViewModelComponent will call create().inject() method*/
+/*  ViewModelComponent is a class for creating a connection between
+    ApiModule, PrefsModule, AppModule in ListViewModel through DaggerViewModelComponent
+    DaggerViewModelComponent will call create().inject() method
+    AppModule is needed for PrefsModule and PrefsModule needed in ListViewModel
+    @Singleton is here because PrefsModule is a Singleton
+*/
 @Singleton
 @Component(modules = [ApiModule::class, PrefsModule::class, AppModule::class])
 interface ViewModelComponent {

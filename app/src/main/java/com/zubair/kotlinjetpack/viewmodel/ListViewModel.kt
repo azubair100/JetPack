@@ -20,34 +20,41 @@ import javax.inject.Inject
 
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
+    //Basic operational variables
     var dogList: MutableLiveData<List<DogBreed>> = MutableLiveData()
     val listLLoadError: MutableLiveData<Boolean> = MutableLiveData()
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     private val disposable = CompositeDisposable()
-
-   /* We can mock these two objects during unit testing
-    Inject at runtime and mock it during unit testing
-    For keeping track of the last room database, dogs table update*/
-    @Inject
-    lateinit var prefHelper: SharedPreferencesHelper
-
-    //Todo: Dagger Goal #2: Inject DogService into ListViewModel class and mock in Unit Test
-    //Step 1: Add provideDogService in ApiModule
-    //Step 2: Create ViewModelComponent add the ApiModule in the "modules =()"
-    //Step 3: The code init{}"
-    @Inject
-    lateinit var dogService: DogService
-
     //time difference is 5 minutes + in nano seconds in Long
     private var refreshTime = 500 * 1000 * 1000 * 1000L
+
+   /*We can mock these two objects during unit testing
+    Inject at runtime and mock it during unit testing
+    For keeping track of the last room database, dogs table update*/
+
+    /*Todo: Dagger Goal #3: Inject SharedPreferencesHelper into ListViewModel class and mock in Unit Test
+    This one is a little complex because SharedPreferencesHelper takes in application context
+    Step 1: Add provideSharedPref in PrefsModule (Check Goal #1 in DogService)
+    Step 2: As a requirement of an Application object inside SharedPreferencesHelper create AppModule
+    Step 3: Add the modules in the ViewModelComponent and make the class a Singleton*/
+    @Inject lateinit var prefHelper: SharedPreferencesHelper
+
+    /*Todo: Dagger Goal #2: Inject DogService into ListViewModel class and mock in Unit Test
+    Step 1: Add provideDogService in ApiModule (Check Goal #1 in DogService)
+    Step 2: Create ViewModelComponent add the ApiModule in the "modules =()"
+    Step 3: The commented ********* code init{}"*/
+    @Inject lateinit var dogService: DogService
+
 
     init{
         /*
          This step only includes injecting DogService into ListViewModel
-         DaggerViewModelComponent.create().inject(this)
+         *********DaggerViewModelComponent.create().inject(this)*********
+
+         We can not use the code above once we decide to inject SharedPreferencesHelper because
+         PrefModule needs an AppModule &
+         AppModule needs an Application object as param as a Singleton
         */
-        //It is needed to be implemented this way because AppModule needs an application param
-        //Which is a Singleton
         DaggerViewModelComponent.builder()
             .appModule(AppModule(application))
             .build().inject(this)
