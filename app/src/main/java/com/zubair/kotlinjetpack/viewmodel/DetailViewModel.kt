@@ -12,7 +12,7 @@ class DetailViewModel(application: Application) : BaseViewModel(application){
     val dogLiveData : MutableLiveData<DogBreed> = MutableLiveData()
 
     fun fetch(uuid: Int){
-        if(checkForOldValue()) {
+        if(previousValuePresent()) {
             launch {
                 dogLiveData.value = DogDataBase(getApplication()).dogDAO().getDogById(uuid)
                 Toast.makeText(getApplication(), "Dogs gotten from database", Toast.LENGTH_LONG).show()
@@ -20,6 +20,6 @@ class DetailViewModel(application: Application) : BaseViewModel(application){
         }
     }
 
-    private fun checkForOldValue(): Boolean = dogLiveData.value == null
+    private fun previousValuePresent(): Boolean = dogLiveData.value == null
 
 }

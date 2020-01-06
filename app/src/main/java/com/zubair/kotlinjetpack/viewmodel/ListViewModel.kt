@@ -3,6 +3,8 @@ package com.zubair.kotlinjetpack.viewmodel
 import android.app.Application
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.zubair.kotlinjetpack.di.modules.AppModule
+import com.zubair.kotlinjetpack.di.components.DaggerViewModelComponent
 import com.zubair.kotlinjetpack.model.DogBreed
 import com.zubair.kotlinjetpack.model.DogDataBase
 import com.zubair.kotlinjetpack.network.DogService
@@ -14,24 +16,45 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
+import javax.inject.Inject
 
 class ListViewModel(application: Application) : BaseViewModel(application) {
 
-    private val dogService = DogService()
     var dogList: MutableLiveData<List<DogBreed>> = MutableLiveData()
     val listLLoadError: MutableLiveData<Boolean> = MutableLiveData()
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     private val disposable = CompositeDisposable()
 
-    //For keeping track of the last room database, dogs table update
-    private var prefHelper = SharedPreferencesHelper(getApplication())
+   /* We can mock these two objects during unit testing
+    Inject at runtime and mock it during unit testing
+    For keeping track of the last room database, dogs table update*/
+    @Inject
+    lateinit var prefHelper: SharedPreferencesHelper
+
+    //Todo: Dagger Goal #2: Inject DogService into ListViewModel class and mock in Unit Test
+    //Step 1: Add provideDogService in ApiModule
+    //Step 2: Create ViewModelComponent add the ApiModule in the "modules =()"
+    //Step 3: The code init{}"
+    @Inject
+    lateinit var dogService: DogService
 
     //time difference is 5 minutes + in nano seconds in Long
     private var refreshTime = 500 * 1000 * 1000 * 1000L
 
+    init{
+        /*
+         This step only includes injecting DogService into ListViewModel
+         DaggerViewModelComponent.create().inject(this)
+        */
+        //It is needed to be implemented this way because AppModule needs an application param
+        //Which is a Singleton
+        DaggerViewModelComponent.builder()
+            .appModule(AppModule(application))
+            .build().inject(this)
+    }
 
     fun refresh(){
-        if(!checkForOldValue()) {
+        if(!previousValuePresent()) {
             checkCacheDuration()
             val updateTime = prefHelper.getUpdateTime()
             if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
@@ -41,8 +64,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    private fun checkForOldValue(): Boolean = !dogList.value.isNullOrEmpty()
-
+    private fun previousValuePresent(): Boolean = !dogList.value.isNullOrEmpty()
 
     fun refreshByPassCache(){ fetchFromRemote() }
 
