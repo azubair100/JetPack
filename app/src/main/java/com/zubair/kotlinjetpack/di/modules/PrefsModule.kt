@@ -1,9 +1,11 @@
 package com.zubair.kotlinjetpack.di.modules
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatActivity
 import com.zubair.kotlinjetpack.util.SharedPreferencesHelper
 import dagger.Module
 import dagger.Provides
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module //Modules have functionalities that we want to inject
@@ -24,6 +26,29 @@ class PrefsModule {
     */
     @Provides
     @Singleton
-    fun provideSharedPref(app: Application): SharedPreferencesHelper
+    @TypeOfContext(CONTEXT_APP)
+    fun provideSharedPreferencesApplicationLevel(app: Application): SharedPreferencesHelper
             = SharedPreferencesHelper(app)
+
+    /*Todo: Dagger Goal #4: What if we need to provideSharedPref() method where
+       it takes an Activity level Context param
+    Dagger's solution @Qualifer
+     Step 1: Create the provideSharedPreferencesActivityLevel()
+     Step 2: Create the @Qualifier TypeOfContext Class below that()
+     Step 3: Create CONTEXT_APP & CONTEXT_ACTIVITY
+     Step 4: Add @TypeOfContext() to the respective methods
+     */
+
+    @Provides
+    @Singleton
+    @TypeOfContext(CONTEXT_ACTIVITY)
+    fun provideSharedPreferencesActivityLevel(activity: AppCompatActivity): SharedPreferencesHelper
+            = SharedPreferencesHelper(activity)
+
 }
+
+const val CONTEXT_APP = "Application Context"
+const val CONTEXT_ACTIVITY = "Application Activity"
+
+@Qualifier
+annotation class TypeOfContext(val type: String)
