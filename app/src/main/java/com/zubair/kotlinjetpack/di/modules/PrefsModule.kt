@@ -9,7 +9,7 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module //Modules have functionalities that we want to inject
-class PrefsModule {
+open class PrefsModule {
 
     //If you need application context passed, create a new module for dagger to handle that
     //Check AppModule
@@ -27,7 +27,7 @@ class PrefsModule {
     @Provides
     @Singleton
     @TypeOfContext(CONTEXT_APP)
-    fun provideSharedPreferencesApplicationLevel(app: Application): SharedPreferencesHelper
+    open fun provideSharedPreferencesApplicationLevel(app: Application): SharedPreferencesHelper
             = SharedPreferencesHelper(app)
 
     /*Todo: Dagger Goal #4: What if we need to provideSharedPref() method where

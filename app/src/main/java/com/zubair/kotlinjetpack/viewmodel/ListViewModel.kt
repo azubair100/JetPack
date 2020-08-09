@@ -50,30 +50,50 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     Step 2: Create ViewModelComponent add the ApiModule in the "modules =()"
     Step 3: The commented ********* code init{}"*/
     @Inject lateinit var dogService: DogService
-
+/*
+    without ListViewModelTest
     init{
-    /*
+    *//*
     This step only includes injecting DogService into ListViewModel
     *********DaggerViewModelComponent.create().inject(this)*********
 
     We can not use the code above once we decide to inject SharedPreferencesHelper because
     PrefModule needs an AppModule &
     AppModule needs an Application object as param as a Singleton
-    */
+    *//*
     DaggerViewModelComponent.builder()
        .appModule(AppModule(application))
        .build().inject(this)
+    }*/
+
+
+    //supporting test
+    private var injected = false
+    constructor(application: Application, test: Boolean = true): this(application){
+        injected = true
     }
 
+    fun inject(){
+        if(!injected){
+            DaggerViewModelComponent.builder()
+                .appModule(AppModule(getApplication()))
+                .build().inject(this)
+        }
+    }
+
+    //supporting test
+
+
     fun refresh(){
-        if(!previousValuePresent()) {
+        inject()
+//        if(!previousValuePresent()) {
            checkCacheDuration()
            val updateTime = prefHelper.getUpdateTime()
            if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime) {
                fetchFromDatabase()
            }
            else { fetchFromRemote() }
-        }
+//        }
     }
 
     private fun previousValuePresent(): Boolean = !dogList.value.isNullOrEmpty()
@@ -99,6 +119,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
 
     //First get dogs from remote api and then store locally and then retrieve it
     private fun fetchFromRemote(){
+        inject()
         loading.value = true
         disposable.add(
            dogService.getDogs()

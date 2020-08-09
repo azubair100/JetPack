@@ -12,13 +12,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 @Module //Modules have functionalities that we want to inject
-class ApiModule {
+open class ApiModule {
     private val BASE_URL = "https://raw.githubusercontent.com/"
+//    private val BASE_URL = "https://swapi.dev/api/"
 
     /*Allows us to inject DogApi where ever we want to
     Basically we will provide a DogApi somewhere*/
     @Provides
-    fun provideApi() : DogApi {
+    open fun provideApi() : DogApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(provideOkHttpClient())
@@ -32,7 +33,7 @@ class ApiModule {
     /*Allows us to inject DogService where ever we want to
     Basically we will provide a DogService somewhere*/
     @Provides
-    fun provideDogService(): DogService = DogService()
+    open fun provideDogService(): DogService = DogService()
 
     private fun provideOkHttpClient(): OkHttpClient {
         val interceptor =
