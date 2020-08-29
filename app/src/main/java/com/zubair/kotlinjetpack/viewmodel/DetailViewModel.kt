@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import com.zubair.kotlinjetpack.model.DogBreed
 import com.zubair.kotlinjetpack.model.DogDataBase
 import kotlinx.coroutines.launch
+import java.util.*
 
 class DetailViewModel(application: Application) : BaseViewModel(application){
 
     val dogLiveData : MutableLiveData<DogBreed> = MutableLiveData()
+
 
     fun fetch(uuid: Int){
         if(previousValuePresent()) {
