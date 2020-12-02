@@ -1,2 +1,2 @@
 # JetPack
-A project just to play around and understand concepts and implemnt Android jetpack with Kotlin
+A project just to play around and understand concepts and implement Android jetpack with Kotlin
